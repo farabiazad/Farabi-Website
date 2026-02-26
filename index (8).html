@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Farabi Azad — Couples Photography</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --mauve:       #6b3f4a;
+  --mauve-dark:  #4a2430;
+  --mauve-mid:   #8a5560;
+  --mauve-light: #c4929b;
+  --blush:       #e8cece;
+  --sand:        #d4b8a8;
+  --ink:         #1e1218;
+  --off-white:   #faf6f3;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background:var(--off-white); color:var(--ink); font-family:'DM Sans',sans-serif; font-weight:300; overflow-x:hidden; cursor:none; }
+
+/* ── CURSOR ── */
+.cursor { position:fixed; width:10px; height:10px; background:var(--mauve); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:transform 0.1s; }
+.cursor-ring { position:fixed; width:36px; height:36px; border:1px solid var(--mauve-light); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:left 0.25s ease, top 0.25s ease; opacity:0.7; }
+
+/* ── NAV ── */
+nav { position:fixed; top:0; left:0; right:0; z-index:200; display:flex; justify-content:space-between; align-items:center; padding:28px 52px; }
+.nav-logo { font-family:'DM Sans',sans-serif; font-size:0.68rem; font-weight:400; letter-spacing:0.3em; text-transform:uppercase; color:#fff; text-decoration:none; }
+.nav-links { display:flex; gap:40px; list-style:none; }
+.nav-links a { font-size:0.62rem; font-weight:300; letter-spacing:0.25em; text-transform:uppercase; color:rgba(255,255,255,0.7); text-decoration:none; transition:color 0.3s; }
+.nav-links a:hover { color:#fff; }
+
+/* ── HERO — full bleed, name overlaid on photo ── */
+.hero {
+  position:relative;
+  width:100%; height:100vh;
+  overflow:hidden;
+  background:var(--mauve-dark);
+}
+
+.hero-photo {
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  animation:zoomSlow 8s ease forwards;
+}
+
+/* Placeholder shown until real photo is added */
+.hero-photo-placeholder {
+  position:absolute; inset:0;
+  background: linear-gradient(135deg, #7a4a55 0%, #4a2430 60%, #2a1020 100%);
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column; gap:12px;
+  color:rgba(255,255,255,0.2); font-size:0.65rem;
+  letter-spacing:0.2em; text-transform:uppercase;
+}
+.hero-photo-placeholder svg { width:40px; height:40px; opacity:0.2; }
+
+/* dark gradient so text reads over photo */
+.hero-overlay {
+  position:absolute; inset:0; z-index:1;
+  background: linear-gradient(
+    to right,
+    rgba(30,12,18,0.72) 0%,
+    rgba(30,12,18,0.3) 55%,
+    rgba(30,12,18,0.05) 100%
+  );
+  box-shadow: inset 0 0 0 4px var(--mauve-dark);
+}
+
+.hero-content {
+  position:absolute; inset:0; z-index:2;
+  display:flex; flex-direction:column;
+  justify-content:flex-end;
+  padding:0 52px 72px;
+}
+
+.hero-tag {
+  font-size:0.6rem; letter-spacing:0.35em; text-transform:uppercase;
+  color:var(--mauve-light); margin-bottom:20px;
+  opacity:0; animation:fadeUp 1s 0.4s forwards;
+}
+
+.hero-name {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(5rem,9vw,11rem);
+  font-weight:900; line-height:0.85;
+  letter-spacing:-0.03em;
+  color:#fff;
+  opacity:0; animation:fadeUp 1s 0.6s forwards;
+}
+.hero-name em { font-style:italic; color:var(--mauve-light); display:block; }
+
+.hero-bottom {
+  margin-top:40px;
+  display:flex; align-items:flex-end;
+  justify-content:space-between;
+  opacity:0; animation:fadeUp 1s 0.9s forwards;
+}
+.hero-desc {
+  font-size:0.8rem; line-height:1.9;
+  color:rgba(255,255,255,0.6);
+  max-width:280px;
+}
+.hero-cta {
+  background:var(--mauve-light); color:var(--mauve-dark);
+  padding:14px 36px; font-size:0.65rem;
+  letter-spacing:0.25em; text-transform:uppercase;
+  text-decoration:none; font-weight:400;
+  transition:background 0.3s; white-space:nowrap;
+}
+.hero-cta:hover { background:#fff; }
+
+@keyframes zoomSlow { from { transform:scale(1.06); } to { transform:scale(1); } }
+
+/* ── MARQUEE ── */
+.marquee-strip { background:var(--mauve); padding:16px 0; overflow:hidden; }
+.marquee-track { display:flex; gap:0; white-space:nowrap; animation:marquee 22s linear infinite; min-width:max-content; }
+.marquee-item { font-family:'Playfair Display',serif; font-size:0.8rem; font-style:italic; color:var(--blush); letter-spacing:0.08em; padding:0 48px; display:inline-flex; align-items:center; gap:48px; }
+.marquee-item::after { content:'✦'; font-style:normal; font-size:0.45rem; opacity:0.6; }
+@keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+/* ── GALLERY SECTION ── */
+.section-gallery { padding: 0; }
+
+.gallery-eyebrow { font-size:0.6rem; letter-spacing:0.32em; text-transform:uppercase; color:var(--mauve-mid); margin-bottom:14px; display:block; }
+.gallery-title { font-family:'Playfair Display',serif; font-size:clamp(3rem,5.5vw,6rem); font-weight:900; line-height:0.88; letter-spacing:-0.02em; color:var(--ink); }
+.gallery-title em { font-style:italic; color:var(--mauve); }
+
+/* ── STICKY SCROLL GALLERY ── */
+.gallery-scroll-outer { position: relative; }
+
+/* The entire pinned frame — full viewport height */
+.gallery-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--off-white);
+}
+
+/* Header sits at top of frozen frame */
+.gallery-header {
+  padding: 48px 52px 36px;
+  flex-shrink: 0;
+  background: var(--off-white);
+  position: relative;
+  z-index: 2;
+}
+
+/* Photo area fills remaining height below header */
+.gallery-track-wrap {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Stack of panels, JS translateY's upward */
+.gallery-track {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+  height: 100%;
+}
+
+/* Each panel fills the track-wrap height exactly */
+.g-panel {
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+  display: flex;
+  gap: 0;
+}
+
+/* ── Panel layouts ── */
+
+/* Layout A: 1 tall portrait (38%) + 1 landscape (62%) */
+.g-panel.layout-a .g-cell:nth-child(1) { width: 38%; }
+.g-panel.layout-a .g-cell:nth-child(2) { width: 62%; }
+
+/* Layout B: 1 wide landscape (62%) + 1 portrait (38%) */
+.g-panel.layout-b .g-cell:nth-child(1) { width: 62%; }
+.g-panel.layout-b .g-cell:nth-child(2) { width: 38%; }
+
+/* Layout C: 3 equal columns */
+.g-panel.layout-c .g-cell { width: 33.333%; }
+
+/* Layout D: 1 full-width cinematic */
+.g-panel.layout-d .g-cell { width: 100%; }
+
+/* Each cell */
+.g-cell {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* mauve border that stays visible over real photos */
+.g-cell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 4px var(--mauve-dark), inset 0 0 32px rgba(74,36,48,0.15);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.g-cell img,
+.g-cell .g-ph {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+.g-cell .g-ph {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 10px; font-size: 0.6rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+}
+.g-cell .g-ph svg { opacity: 0.28; width: 28px; height: 28px; }
+
+/* mauve tones */
+.t1 { background:#7a4a55; color:rgba(255,255,255,0.38); }
+.t2 { background:#5a3040; color:rgba(255,255,255,0.38); }
+.t3 { background:#8a6070; color:rgba(255,255,255,0.38); }
+.t4 { background:#4a2835; color:rgba(255,255,255,0.38); }
+.t5 { background:#9a7080; color:rgba(255,255,255,0.38); }
+.t6 { background:#6a3845; color:rgba(255,255,255,0.38); }
+.t7 { background:#7a5060; color:rgba(255,255,255,0.38); }
+.t8 { background:#543040; color:rgba(255,255,255,0.38); }
+
+/* caption at the bottom of each cell */
+.g-cap {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(74,36,48,0.85) 0%, transparent 45%);
+  display: flex; align-items: flex-end;
+  padding: 32px 36px;
+  pointer-events: none;
+  opacity: 0; transition: opacity 0.4s;
+}
+.g-cell:hover .g-cap { opacity: 1; }
+.g-cap-sub { font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--mauve-light); display: block; margin-bottom: 6px; }
+.g-cap-title { font-family: 'Playfair Display', serif; font-size: clamp(1.2rem, 2.5vw, 2rem); font-weight: 700; font-style: italic; color: #fff; line-height: 1.1; }
+
+/* panel counter bottom-right */
+.gallery-counter {
+  position: absolute;
+  bottom: 28px; right: 40px; z-index: 10;
+  pointer-events: none;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.75rem; font-style: italic;
+  color: rgba(255,255,255,0.45);
+}
+
+/* dot nav right side */
+.gallery-dots {
+  position: absolute;
+  right: 40px; top: 50%;
+  transform: translateY(-50%);
+  z-index: 10; pointer-events: none;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.g-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transition: background 0.3s, transform 0.3s;
+}
+.g-dot.active { background: var(--mauve-light); transform: scale(1.6); }
+
+/* ── STATS BAR ── */
+.stats-bar { display:grid; grid-template-columns:repeat(4,1fr); background:var(--mauve-dark); margin-top:0; }
+.stat-cell { padding:44px 36px; border-right:1px solid rgba(255,255,255,0.07); }
+.stat-cell:last-child { border-right:none; }
+.stat-num { font-family:'Playfair Display',serif; font-size:clamp(2rem,3.5vw,3.5rem); font-weight:900; color:var(--mauve-light); line-height:1; display:block; margin-bottom:8px; }
+.stat-label { font-size:0.62rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--sand); }
+
+/* ── STATEMENT ── */
+.statement-section { background:var(--mauve); padding:100px 52px; display:grid; grid-template-columns:1fr 1.4fr; gap:80px; align-items:center; position:relative; overflow:hidden; }
+.statement-section::after { content:'"'; font-family:'Playfair Display',serif; font-size:28vw; font-weight:900; color:rgba(255,255,255,0.04); position:absolute; top:-15%; right:-3%; line-height:1; pointer-events:none; }
+.statement-img { aspect-ratio:3/4; overflow:hidden; position:relative; z-index:1; }
+.statement-img img, .s-ph { width:100%; height:100%; object-fit:cover; display:block; }
+.s-ph { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background:linear-gradient(160deg,var(--mauve-dark),#2a1020); color:rgba(255,255,255,0.22); font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; }
+.s-ph svg { opacity:0.22; width:32px; height:32px; }
+.statement-body { position:relative; z-index:1; }
+.statement-quote { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,3vw,3.5rem); font-weight:700; font-style:italic; line-height:1.25; color:#fff; margin-bottom:32px; }
+.statement-quote span { color:var(--blush); }
+.statement-byline { font-size:0.62rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--mauve-light); }
+
+/* ── CONTACT ── */
+.section-contact { padding:110px 52px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.contact-title { font-family:'Playfair Display',serif; font-size:clamp(2.8rem,4.5vw,5rem); font-weight:900; line-height:0.9; letter-spacing:-0.02em; color:var(--ink); margin-bottom:28px; }
+.contact-title em { font-style:italic; color:var(--mauve); display:block; }
+.contact-body { font-size:0.82rem; line-height:1.9; color:var(--mauve-mid); max-width:340px; margin-bottom:44px; }
+.contact-detail { display:flex; flex-direction:column; gap:13px; }
+.c-row { display:flex; gap:16px; align-items:baseline; }
+.c-lbl { font-size:0.57rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--mauve-light); width:80px; flex-shrink:0; }
+.c-val { font-size:0.82rem; color:var(--ink); }
+
+.contact-form { display:flex; flex-direction:column; gap:20px; }
+.f-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.f-grp { display:flex; flex-direction:column; gap:7px; }
+.f-grp label { font-size:0.57rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--mauve-mid); }
+.f-grp input, .f-grp select, .f-grp textarea {
+  background:transparent; border:none; border-bottom:1px solid var(--blush);
+  padding:10px 0; font-family:'DM Sans',sans-serif; font-size:0.88rem;
+  font-weight:300; color:var(--ink); outline:none; transition:border-color 0.3s;
+  -webkit-appearance:none; appearance:none; cursor:none;
+}
+.f-grp input::placeholder, .f-grp textarea::placeholder { color:var(--sand); }
+.f-grp input:focus, .f-grp select:focus, .f-grp textarea:focus { border-color:var(--mauve); }
+.f-grp select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a5560'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 4px center; padding-right:20px; }
+.f-grp textarea { resize:none; height:88px; }
+
+.submit-btn { align-self:flex-start; margin-top:6px; background:var(--mauve-dark); color:#fff; border:none; padding:16px 44px; font-family:'DM Sans',sans-serif; font-size:0.65rem; letter-spacing:0.28em; text-transform:uppercase; cursor:none; position:relative; overflow:hidden; }
+.submit-btn::after { content:''; position:absolute; inset:0; background:var(--mauve); transform:scaleX(0); transform-origin:left; transition:transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94); }
+.submit-btn:hover::after { transform:scaleX(1); }
+.submit-btn span { position:relative; z-index:1; }
+
+.form-success { display:none; text-align:center; padding:60px 40px; border:1px solid var(--blush); }
+.form-success.show { display:block; }
+.success-glyph { font-family:'Playfair Display',serif; font-size:3rem; font-style:italic; color:var(--mauve); display:block; margin-bottom:14px; }
+.form-success p { font-size:0.8rem; color:var(--mauve-mid); line-height:1.9; }
+
+/* ── FOOTER ── */
+footer { background:var(--mauve-dark); padding:36px 52px; display:flex; justify-content:space-between; align-items:center; }
+.footer-name { font-family:'Playfair Display',serif; font-size:1.05rem; font-style:italic; color:var(--blush); }
+.footer-links { display:flex; gap:28px; }
+.footer-links a { font-size:0.6rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--mauve-light); text-decoration:none; transition:color 0.3s; }
+.footer-links a:hover { color:var(--blush); }
+.footer-copy { font-size:0.58rem; letter-spacing:0.12em; color:rgba(255,255,255,0.22); }
+
+/* ── LIGHTBOX ── */
+.lightbox { position:fixed; inset:0; z-index:999; background:rgba(20,10,15,0.97); display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.4s; }
+.lightbox.open { opacity:1; pointer-events:all; }
+.lb-inner { max-width:90vw; max-height:90vh; position:relative; }
+.lb-close { position:absolute; top:-34px; right:0; background:none; border:none; color:var(--mauve-light); font-size:0.6rem; letter-spacing:0.28em; text-transform:uppercase; cursor:none; }
+.lb-ph { width:60vw; height:68vh; background:linear-gradient(160deg,var(--mauve),var(--mauve-dark)); display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.25); font-size:0.68rem; letter-spacing:0.2em; text-transform:uppercase; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(26px)} to{opacity:1;transform:translateY(0)} }
+.reveal { opacity:0; transform:translateY(28px); transition:opacity 0.85s ease, transform 0.85s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  nav { padding:18px 22px; }
+  .nav-links { display:none; }
+  body { cursor:auto; }
+  .cursor,.cursor-ring { display:none; }
+  .hero-content { padding:0 22px 52px; }
+  .hero-name { font-size:clamp(3.5rem,13vw,6rem); }
+  .hero-bottom { flex-direction:column; align-items:flex-start; gap:24px; }
+  .gallery-scroll-outer { height: auto !important; }
+  .gallery-sticky { position: relative; height: auto; overflow: visible; flex-direction: column; }
+  .gallery-header { padding: 40px 22px 28px; }
+  .gallery-track-wrap { height: auto; overflow: visible; }
+  .gallery-track { transform: none !important; height: auto; }
+  .g-panel { flex-direction: column; height: auto; }
+  .g-panel .g-cell { width: 100% !important; height: 60vw; min-height: 220px; }
+  .gallery-dots, .gallery-counter { display: none; }
+  .g-cap { opacity: 1; }
+  .stats-bar { grid-template-columns:1fr 1fr; }
+  .stat-cell { border-bottom:1px solid rgba(255,255,255,0.07); }
+  .statement-section { grid-template-columns:1fr; gap:40px; padding:72px 22px; }
+  .statement-img { aspect-ratio:4/3; }
+  .section-contact { grid-template-columns:1fr; gap:48px; padding:72px 22px; }
+  .f-row { grid-template-columns:1fr; }
+  footer { flex-direction:column; gap:16px; text-align:center; padding:28px 22px; }
+  .footer-links { justify-content:center; flex-wrap:wrap; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Farabi Azad</a>
+  <ul class="nav-links">
+    <li><a href="#gallery">Work</a></li>
+    <li><a href="#contact">Inquire</a></li>
+  </ul>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <!--
+    ADD YOUR HERO PHOTO:
+    Replace the div below with:
+    <img src="your-hero-photo.jpg" class="hero-photo" alt="Hero"/>
+  -->
+  <div class="hero-photo-placeholder">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+    <span>Your hero photo here</span>
+  </div>
+
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <span class="hero-tag">Couples Photography — NYC</span>
+    <h1 class="hero-name">
+      Farabi<br>
+      <em>Azad</em>
+    </h1>
+    <div class="hero-bottom">
+      <p class="hero-desc">Intimate, editorial photography for couples who want their story felt — not just photographed.</p>
+      <a href="#contact" class="hero-cta">Book a Session</a>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <span class="marquee-item">Anniversary Shoots</span>
+    <span class="marquee-item">Elopements</span>
+    <span class="marquee-item">Weddings</span>
+    <span class="marquee-item">Grad Photos</span>
+    <span class="marquee-item">Couples Shoots</span>
+    <span class="marquee-item">Engagement Shoots</span>
+    <!-- duplicate for seamless loop -->
+    <span class="marquee-item">Anniversary Shoots</span>
+    <span class="marquee-item">Elopements</span>
+    <span class="marquee-item">Weddings</span>
+    <span class="marquee-item">Grad Photos</span>
+    <span class="marquee-item">Couples Shoots</span>
+    <span class="marquee-item">Engagement Shoots</span>
+  </div>
+</div>
+
+<!-- ══ GALLERY ══ -->
+<section class="section-gallery" id="gallery">
+
+  <div class="gallery-scroll-outer" id="galleryOuter">
+
+    <!-- This entire block is pinned — header + photos together -->
+    <div class="gallery-sticky" id="gallerySticky">
+
+      <!-- Header lives inside the frozen frame -->
+      <div class="gallery-header">
+        <span class="gallery-eyebrow">Selected Work — 2024</span>
+        <h2 class="gallery-title">The <em>Gallery</em></h2>
+      </div>
+
+      <!-- Photo panels scroll inside the lower portion -->
+      <div class="gallery-track-wrap">
+        <div class="gallery-track" id="galleryTrack">
+
+          <!-- PANEL 1: portrait + landscape (A) -->
+          <div class="g-panel layout-a">
+            <div class="g-cell">
+              <!-- <img src="p1.jpg" alt=""/> -->
+              <div class="g-ph t1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Photo 01</span></div>
+              <div class="g-cap"><div><span class="g-cap-sub">Couples</span><span class="g-cap-title">Golden Hour</span></div></div>
+            </div>
+            <div class="g-cell">
+              <!-- <img src="p2.jpg" alt=""/> -->
+              <div class="g-ph t2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Photo 02</span></div>
+              <div class="g-cap"><div><span class="g-cap-sub">Engagement</span><span class="g-cap-title">City Light</span></div></div>
+            </div>
+          </div>
+
+          <!-- PANEL 2: 3 equal columns (C) -->
+          <div class="g-panel layout-c">
+            <div class="g-cell">
+              <!-- <img src="p3.jpg" alt=""/> -->
+              <div class="g-ph t3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Photo 03</span></div>
+              <div class="g-cap"><div><span class="g-cap-sub">Intimate</span><span class="g-cap-title">Soft Light</span></div></div>
+            </div>
+            <div class="g-cell">
+              <!-- <img src="p4.jpg" alt=""/> -->
+              <div class="g-ph t4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Photo 04</span></div>
+              <div class="g-cap"><div><span class="g-cap-sub">Together</span><span class="g-cap-title">Story Session</span></div></div>
+            </div>
+            <div class="g-cell">
+              <!-- <img src="p5.jpg" alt=""/> -->
+              <div class="g-ph t5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Photo 05</span></div>
+              <div class="g-cap"><div><span class="g-cap-sub">Candid</span><span class="g-cap-title">In the Moment</span></div></div>
+            </div>
+          </div>
+
+          <!-- PANEL 3: landscape + portrait flipped (B) -->
+          <div class="g-panel layout-b">
+            <div class="g-cell">
+              <!-- <img src="p6.jpg" alt=""/> -->
+              <div class="g-ph t6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Photo 06</span></div>
+              <div class="g-cap"><div><span class="g-cap-sub">Evening</span><span class="g-cap-title">Warm Glow</span></div></div>
+            </div>
+            <div class="g-cell">
+              <!-- <img src="p7.jpg" alt=""/> -->
+              <div class="g-ph t7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Photo 07</span></div>
+              <div class="g-cap"><div><span class="g-cap-sub">Outdoor</span><span class="g-cap-title">Natural Light</span></div></div>
+            </div>
+          </div>
+
+          <!-- PANEL 4: full bleed (D) -->
+          <div class="g-panel layout-d">
+            <div class="g-cell">
+              <!-- <img src="p8.jpg" alt=""/> -->
+              <div class="g-ph t8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Photo 08 — Full Width</span></div>
+              <div class="g-cap"><div><span class="g-cap-sub">Featured</span><span class="g-cap-title">The Full Story</span></div></div>
+            </div>
+          </div>
+
+        </div><!-- /gallery-track -->
+      </div><!-- /gallery-track-wrap -->
+
+      <div class="gallery-dots" id="galleryDots"></div>
+      <div class="gallery-counter" id="galleryCounter">1 / 4</div>
+
+    </div><!-- /gallery-sticky -->
+  </div><!-- /gallery-scroll-outer -->
+
+  <!-- STATS -->
+  <div class="stats-bar reveal">
+    <div class="stat-cell"><span class="stat-num">48h</span><span class="stat-label">Gallery delivery</span></div>
+    <div class="stat-cell"><span class="stat-num">100%</span><span class="stat-label">Edited photos</span></div>
+    <div class="stat-cell"><span class="stat-num">NYC</span><span class="stat-label">Based & travel-ready</span></div>
+    <div class="stat-cell"><span class="stat-num">∞</span><span class="stat-label">Memories made</span></div>
+  </div>
+
+</section>
+
+<!-- ══ STATEMENT ══ -->
+<section class="statement-section reveal">
+  <div class="statement-img">
+    <!-- <img src="about.jpg" alt="Farabi Azad"/> -->
+    <div class="s-ph">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span>Your photo</span>
+    </div>
+  </div>
+  <div class="statement-body">
+    <p class="statement-quote">"Every couple has a story that deserves to be <span>felt</span>, not just seen."</p>
+    <span class="statement-byline">— Farabi Azad, Photographer</span>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section class="section-contact" id="contact">
+  <div class="reveal">
+    <h2 class="contact-title">Let's Tell<em>Your Story</em></h2>
+    <p class="contact-body">I'd love to hear about you and your partner. Fill out the form and I'll be in touch within 48 hours to talk vision, location, and dates.</p>
+    <div class="contact-detail">
+      <div class="c-row"><span class="c-lbl">Email</span><span class="c-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="650d0009090a2503041704070c041f04014b060a08">[email&#160;protected]</a></span></div>
+      <div class="c-row"><span class="c-lbl">Based</span><span class="c-val">New York City — Available to travel</span></div>
+      <div class="c-row"><span class="c-lbl">Response</span><span class="c-val">Within 48 hours</span></div>
+    </div>
+  </div>
+  <div class="reveal">
+    <!--
+      TO ACTIVATE FORM:
+      1. Go to formspree.io — create a free account
+      2. Create a new form and copy your ID (e.g. abc123xyz)
+      3. Replace YOUR_FORM_ID below with your actual ID
+    -->
+    <form class="contact-form" id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <input type="hidden" name="_replyto" value="azadf1594@gmail.com"/>
+      <div class="f-row">
+        <div class="f-grp"><label>Your name</label><input type="text" name="name" placeholder="First & last" required/></div>
+        <div class="f-grp"><label>Partner's name</label><input type="text" name="partner" placeholder="First & last"/></div>
+      </div>
+      <div class="f-grp"><label>Email</label><input type="email" name="email" placeholder="your@email.com" required/></div>
+      <div class="f-row">
+        <div class="f-grp">
+          <label>Session type</label>
+          <select name="session">
+            <option value="">Select one</option>
+            <option>Couples Portrait</option>
+            <option>Engagement</option>
+            <option>Anniversary</option>
+            <option>Elopement</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="f-grp"><label>Ideal date</label><input type="text" name="date" placeholder="Month / Year"/></div>
+      </div>
+      <div class="f-grp"><label>Your vision</label><textarea name="message" placeholder="Location ideas, vibe, anything you'd like me to know..."></textarea></div>
+      <button type="submit" class="submit-btn"><span>Send Inquiry</span></button>
+    </form>
+    <div class="form-success" id="formSuccess">
+      <span class="success-glyph">✦</span>
+      <p>Thank you for reaching out.<br>I'll be in touch within 48 hours.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-name">Farabi Azad</span>
+  <div class="footer-links">
+    <a href="#">Instagram</a>
+    <a href="#">VSCO</a>
+    <a href="#gallery">Work</a>
+    <a href="#contact">Inquire</a>
+  </div>
+  <span class="footer-copy">© 2025 Farabi Azad Photography</span>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lb-inner" onclick="event.stopPropagation()">
+    <button class="lb-close" onclick="closeLightbox()">Close ✕</button>
+    <div class="lb-ph">Photo Preview</div>
+  </div>
+</div>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring   = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+    ring.style.left   = e.clientX + 'px';
+    ring.style.top    = e.clientY + 'px';
+  });
+
+  // Scroll reveal
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  // ── STICKY GALLERY ──
+  // How it works:
+  // .gallery-scroll-outer is a tall div (100vh + scroll distance).
+  // .gallery-sticky inside it is position:sticky top:0, height:100vh — it freezes.
+  // As the page scrolls through the outer div, we map that scroll to
+  // translateY on the track, cycling through panels. When outer's scroll
+  // budget is exhausted, sticky releases and the page scrolls normally again.
+
+  const outer     = document.getElementById('galleryOuter');
+  const sticky    = document.getElementById('gallerySticky');
+  const track     = document.getElementById('galleryTrack');
+  const trackWrap = document.querySelector('.gallery-track-wrap');
+  const dotsEl    = document.getElementById('galleryDots');
+  const counter   = document.getElementById('galleryCounter');
+  const panels    = Array.from(track.querySelectorAll('.g-panel'));
+  const N         = panels.length;
+
+  // Build dots
+  panels.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'g-dot' + (i === 0 ? ' active' : '');
+    dotsEl.appendChild(d);
+  });
+  const dots = Array.from(dotsEl.querySelectorAll('.g-dot'));
+
+  function initGallery() {
+    // wrapH = height of the photo area (viewport minus header)
+    const wrapH = trackWrap.offsetHeight;
+    // outer must be tall enough so the sticky element scrolls through all N panels:
+    // 100vh (so sticky activates at top) + (N-1) * wrapH (one wrapH per transition)
+    outer.style.height = (window.innerHeight + (N - 1) * wrapH) + 'px';
+  }
+
+  function onScroll() {
+    const wrapH    = trackWrap.offsetHeight;
+    const maxScroll = (N - 1) * wrapH;
+    // How far we've scrolled INTO the outer div (clamped 0 → maxScroll)
+    const scrolled = Math.max(0, Math.min(-outer.getBoundingClientRect().top, maxScroll));
+
+    // Translate the track upward by exactly that amount
+    track.style.transform = `translateY(-${scrolled}px)`;
+
+    // Update dots & counter
+    const index = Math.min(Math.floor((scrolled / wrapH) + 0.15), N - 1);
+    dots.forEach((d, i) => d.classList.toggle('active', i === index));
+    counter.textContent = `${index + 1} / ${N}`;
+  }
+
+  window.addEventListener('load', () => { initGallery(); onScroll(); });
+  window.addEventListener('resize', () => { initGallery(); onScroll(); });
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Lightbox
+  document.querySelectorAll('.g-cell').forEach(el => {
+    el.addEventListener('click', () => document.getElementById('lightbox').classList.add('open'));
+  });
+  function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+  // Form
+  const form = document.getElementById('contactForm');
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    if (form.action.includes('YOUR_FORM_ID')) {
+      form.style.display = 'none';
+      document.getElementById('formSuccess').classList.add('show');
+      return;
+    }
+    try {
+      const res = await fetch(form.action, { method:'POST', body:new FormData(form), headers:{'Accept':'application/json'} });
+      if (res.ok) { form.style.display='none'; document.getElementById('formSuccess').classList.add('show'); }
+    } catch { alert('Something went wrong. Please email directly.'); }
+  });
+</script>
+</body>
+</html>
